@@ -8,9 +8,27 @@ services:
       - 'stirling-logs:/logs/'
     environment:
       - SERVICE_FQDN_SPDF_8080
-      - DOCKER_ENABLE_SECURITY=false
+      - DOCKER_ENABLE_SECURITY=true
+      - SECURITY_ENABLE_LOGIN=true
+      - PUID=1002
+      - PGID=1002
+      - UMASK=022
+      - 'SYSTEM_DEFAULTLOCALE="es-ES"'
+      - UI_APPNAME=StirlingPDF
+      - UI_HOMEDESCRIPTION=StirlingPDF
+      - UI_APPNAMENAVBAR=StirlingPDF
+      - SYSTEM_MAXFILESIZE=100
+      - METRICS_ENABLED=true
+      - SYSTEM_GOOGLEVISIBILITY=true
+      - SECURITY_INITIALLOGIN_USERNAME=dappspdfuser
+      - SECURITY_INITIALLOGIN_PASSWORD=dappspdf
     healthcheck:
-      test: 'curl --fail -I http://127.0.0.1:8080 || exit 1'
+      test: 'curl -f http://localhost:8080/api/v1/info/status | grep -q "UP"'
       interval: 5s
-      timeout: 20s
-      retries: 10
+      timeout: 10s
+      retries: 16
+volumes:
+  stirling-training-data: null
+  stirling-configs: null
+  stirling-custom-files: null
+  stirling-logs: null
